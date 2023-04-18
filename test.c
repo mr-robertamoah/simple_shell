@@ -293,12 +293,12 @@ void run_normally(int ac, char **argv)
  *
  * Return: Always 0.
  */
-int main(int ac, char **argv)
+int main(int __attribute__((unused))ac, char **argv)
 {
 	char *r_char = NULL, **arv;
 	size_t r_n = 0;
 	ssize_t n_char;
-	int n_tokens = 0, i, is_interactive = isatty(STDIN_FILENO);
+	int n_tokens = 0, is_interactive = isatty(STDIN_FILENO);
 
 	while (1)
 	{
