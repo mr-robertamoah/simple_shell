@@ -57,29 +57,6 @@ int set_alias(info_t *info, char *str)
 }
 
 /**
- * print_alias - prints an alias string
- * @node: the alias node
- *
- * Return: Always 0 on success, 1 on error
- */
-int print_alias(list_t *node)
-{
-	char *p = NULL, *a = NULL;
-
-	if (node)
-	{
-		p = _strchr(node->str, '=');
-		for (a = node->str; a <= p; a++)
-		_putchar(*a);
-		_putchar('\'');
-		_puts(p + 1);
-		_puts("'\n");
-		return (0);
-	}
-	return (1);
-}
-
-/**
  * _myalias - mimics the alias builtin (man alias)
  * @info: Structure containing potential arguments. Used to maintain
  * constant function prototype.
@@ -96,7 +73,7 @@ int _myalias(info_t *info)
 		node = info->alias;
 		while (node)
 		{
-			print_alias(node);
+			/*print_alias(node);*/
 			node = node->next;
 		}
 		return (0);
@@ -106,8 +83,8 @@ int _myalias(info_t *info)
 		p = _strchr(info->argv[i], '=');
 		if (p)
 			set_alias(info, info->argv[i]);
-		else
-			print_alias(node_starts_with(info->alias, info->argv[i], '='));
+	/*	else*/
+			/*print_alias(node_starts_with(info->alias, info->argv[i], '='));*/
 	}
 
 	return (0);

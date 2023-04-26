@@ -11,6 +11,7 @@
 #include <limits.h>
 #include <fcntl.h>
 #include <errno.h>
+#include <dirent.h>
 
 /* for read/write buffers */
 #define READ_BUF_SIZE 1024
@@ -130,16 +131,9 @@ int _putfd(char c, int fd);
 int _putsfd(char *str, int fd);
 
 /* toem_string.c */
-int _strlen(char *);
-int _strcmp(char *, char *);
 char *starts_with(const char *, const char *);
-char *_strcat(char *, char *);
 
 /* toem_string1.c */
-char *_strcpy(char *, char *);
-char *_strdup(const char *);
-void _puts(char *);
-int _putchar(char);
 
 /* toem_exits.c */
 char *_strncpy(char *, char *, int);
@@ -153,7 +147,6 @@ char **strtow2(char *, char);
 /* toem_realloc.c */
 char *_memset(char *, char, unsigned int);
 void ffree(char **);
-void *_realloc(void *, unsigned int, unsigned int);
 
 /* toem_memory.c */
 int bfree(void **);
@@ -166,7 +159,7 @@ int _atoi(char *);
 
 /* toem_errors1.c */
 int _erratoi(char *);
-void print_error(info_t *, char *);
+/*void print_error(info_t *, char *);*/
 int print_d(int, int);
 char *convert_number(long int, int, int);
 void remove_comments(char *);
@@ -199,8 +192,8 @@ int populate_env_list(info_t *);
 
 /* toem_getenv.c */
 char **get_environ(info_t *);
-int _unsetenv(info_t *, char *);
-int _setenv(info_t *, char *, char *);
+/*int _unsetenv(info_t *, char *);*/
+/*int _setenv(info_t *, char *, char *);*/
 
 /* toem_history.c */
 char *get_history_file(info_t *info);
@@ -226,8 +219,76 @@ ssize_t get_node_index(list_t *, list_t *);
 /* toem_vars.c */
 int is_chain(info_t *, char *, size_t *);
 void check_chain(info_t *, char *, size_t *, size_t, size_t);
-int replace_alias(info_t *);
+/*int replace_alias(info_t *);*/
 int replace_vars(info_t *);
 int replace_string(char **, char *);
+
+/* Robert Amoah */
+#define DELIM " \n"
+#define BUF 1024
+#define UNUSED(x) ((void) x)
+#define MAX_ALIASES 20
+
+/**
+ * struct alias - contains name and command of aliase
+ * @name: name of alias
+ * @command: command of alias
+ */
+typedef struct alias
+{
+	char *name;
+	char *command;
+} alias_t;
+
+/**
+ * struct alias_info - contains name and command of aliase
+ * @name: name of alias
+ * @command: command of alias
+ */
+typedef struct alias_info
+{
+	int aliases_n;
+	int aliases_max;
+	alias_t *aliases;
+} alias_info_t;
+
+/* my functions */
+int add_alias(char *name, char *value, alias_info_t *info);
+int print_aliases(alias_info_t *);
+void print_env(void);
+char *_strcpy(char *, const char *);
+char *_strdup(const char *);
+void _puts(char *);
+int _putchar(char);
+void *_realloc(void *, unsigned int, unsigned int);
+int _strlen(const char *);
+int _strcmp(char *, char *);
+int _strncmp(char *, char *, int);
+char *_strcat(char *, char *);
+char *_strtok(char *str, char *delim);
+void free_all(char **str);
+int convert_to_error_status(char *str);
+void get_cwd(void);
+int is_built_in(char *str);
+int exec_cmd(char **arv, char *pathname);
+int run_based_on_path(char **arv, char **argv, alias_info_t *info);
+char *get_env(char *name);
+void set_n_tokens(int *n_tokens, char *r_char);
+void set_tokens(char ***arv, char *r_char);
+int get_line(char **str, size_t *n, int fd);
+void _cd(char **arv);
+void _setenv(const char *name, const char *value);
+void _unsetenv(char *name);
+void __exit(int status, char **arv, alias_info_t *info);
+void memory_alloc_err(alias_info_t *);
+void run_command(char **arv, char **argv, alias_info_t *info);
+int set_error(int err, char *env);
+void print_error(char **arv, char **argv);
+void strip_comments(char **str);
+void _echo(char **arv);
+void convert_to_string(long int, char *);
+void free_aliases(alias_info_t *);
+int print_alias(char *name, alias_info_t *);
+void init_info(alias_info_t *info);
 
 #endif
