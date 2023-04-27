@@ -16,5 +16,6 @@ void free_all(char **str)
 	while (str && str[i])
 		free(str[i++]);
 
-	/*free(str);*/
+	free(str);
+	str = NULL;
 }

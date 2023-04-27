@@ -26,12 +26,12 @@ int exec_cmd(char **arv, char *pathname)
 
 		perror(pathname);
 
-		exit(1);
+		exit(48);
 	}
 	else
 	{
 		wait(&status);
-		if (WIFEXITED(status))
+		if (status != 0)
 		{
 			return (0);
 		}

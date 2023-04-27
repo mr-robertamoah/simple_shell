@@ -93,13 +93,18 @@ int add_alias(char *name, char *command, alias_info_t *info)
  */
 void free_aliases(alias_info_t *info)
 {
-	int i = 0;
+	/*int i = 0;*/
 
-	if (!(info->aliases))
+	if (!info)
 		return;
 
-	while (i < info->aliases_n)
+/*	while (i < info->aliases_n)
 	{
+		if (!(info->aliases + i))
+		{
+			i++;
+			continue;
+		}
 		if ((info->aliases[i]).name)
 			free((info->aliases[i]).name);
 		if ((info->aliases[i]).command)
@@ -107,11 +112,14 @@ void free_aliases(alias_info_t *info)
 
 		i++;
 	}
-
+*/
 	info->aliases_n = 0;
-	info->aliases_max = MAX_ALIASES;
-	free(info->aliases);
+	info->aliases_max = 0;
+	if (info->aliases)
+		free(info->aliases);
 	info->aliases = NULL;
+	free(info);
+	info = NULL;
 }
 
 /**
@@ -127,23 +135,26 @@ int print_alias(char *name, alias_info_t *info)
 {
 	int i = 0, j, name_len, command_len;
 
-	if (!(info->aliases) || name == NULL)
+	if (!info || !(info->aliases) || name == NULL)
 		return (0);
 
 	while (i < info->aliases_n)
 	{
-		if (_strcmp((info->aliases[i]).name, name) == 0)
+		if ((info->aliases[i]).name && 
+			_strcmp((info->aliases[i]).name, name) == 0)
 		{
 			name_len = _strlen((info->aliases[i]).name);
-			command_len = _strlen((info->aliases[i]).command);
 			for (j = 0; j < name_len; j++)
 				_putchar(((info->aliases[i]).name)[j]);
 
 			_putchar('=');
 
-			for (j = 0; j < command_len; j++)
-				_putchar(((info->aliases[i]).command)[j]);
-
+			if (info->aliases[i].command)
+			{
+				command_len = _strlen((info->aliases[i]).command);
+				for (j = 0; j < command_len; j++)
+					_putchar(((info->aliases[i]).command)[j]);
+			}	
 			_putchar('\n');
 			break;
 		}
@@ -164,21 +175,26 @@ int print_aliases(alias_info_t *info)
 {
 	int i = 0, j, name_len, command_len;
 
-	if (!(info->aliases))
+	if (!info || !(info->aliases))
 		return (0);
 
 	while (i < info->aliases_n)
 	{
-		name_len = _strlen((info->aliases[i]).name);
-		command_len = _strlen((info->aliases[i]).command);
-		for (j = 0; j < name_len; j++)
-			_putchar(((info->aliases[i]).name)[j]);
+		if (info->aliases[i].name)
+		{
+			name_len = _strlen((info->aliases[i]).name);
+			for (j = 0; j < name_len; j++)
+				_putchar(((info->aliases[i]).name)[j]);
 
-		_putchar('=');
-		for (j = 0; j < command_len; j++)
-			_putchar(((info->aliases[i]).command)[j]);
-
-		_putchar('\n');
+			_putchar('=');
+			if (info->aliases[i].command)
+			{
+				command_len = _strlen((info->aliases[i]).command);
+				for (j = 0; j < command_len; j++)
+					_putchar(((info->aliases[i]).command)[j]);
+			}
+			_putchar('\n');
+		}
 		i++;
 	}
 	return (1);

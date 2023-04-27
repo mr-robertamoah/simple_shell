@@ -99,10 +99,8 @@ int _run(char **arv, char **argv, alias_info_t *info)
 char **malloc_void(char **new_arv, alias_info_t *info)
 {
 	if (new_arv)
-	{
 		free_all(new_arv);
-		free(new_arv);
-	}
+
 	new_arv = malloc(sizeof(char *) * MAX_ARV);
 	if (!new_arv)
 		memory_alloc_err(info);
@@ -157,7 +155,6 @@ void run_command(char **arv, char **argv, alias_info_t *info)
 		{
 			new_arv[j] = NULL;
 			status = _run(new_arv, argv, info);
-
 			if (_strcmp(arv[i], "||") == 0 && status)
 				return;
 			if (_strcmp(arv[i], "&&") == 0 && !status)
@@ -177,8 +174,4 @@ void run_command(char **arv, char **argv, alias_info_t *info)
 		new_arv[j] = NULL;
 		_run(new_arv, argv, info);
 	}
-	if (!new_arv)
-		return;
-	free_all(new_arv);
-	free(new_arv);
 }

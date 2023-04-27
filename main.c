@@ -1,5 +1,4 @@
 #include "shell.h"
-
 /**
 * memory_alloc_err - error
 * @info: alias_info_t *
@@ -11,7 +10,8 @@
 */
 void memory_alloc_err(alias_info_t *info)
 {
-	free_aliases(info);
+	if (info)
+		free_aliases(info);
 	perror("tsh: memory allocation failed");
 	exit(EXIT_FAILURE);
 }
@@ -28,12 +28,10 @@ void memory_alloc_err(alias_info_t *info)
 */
 void __exit(int status, char **arv, alias_info_t *info)
 {
-	free_aliases(info);
+	if (info)
+		free_aliases(info);
 	if (arv)
-	{
 		free_all(arv);
-		free(arv);
-	}
 
 	_exit(status);
 }
@@ -50,14 +48,14 @@ void init_info(alias_info_t *info)
 {
 	if (!info)
 	{
-		info = malloc(sizeof(alias_info_t *));
+		info = malloc(sizeof(alias_info_t));
 		if (!info)
 			memory_alloc_err(NULL);
 	}
 
 	info->aliases_n = 0;
 	info->aliases_max = MAX_ALIASES;
-	info->aliases = malloc(sizeof(alias_t *));
+	info->aliases = malloc(sizeof(alias_t) * MAX_ALIASES);
 }
 
 /**
@@ -78,7 +76,7 @@ int main(int __attribute__((unused)) ac, char **argv)
 	int n_tokens = 0, is_interactive;
 	alias_info_t *info = NULL;
 
-	init_info(info);
+/*	init_info(info);*/
 	is_interactive = isatty(STDIN_FILENO);
 	while (1)
 	{
@@ -87,9 +85,8 @@ int main(int __attribute__((unused)) ac, char **argv)
 		n_char = get_line(&r_char, &r_n, STDIN_FILENO);
 		if (n_char == -1)
 		{
-			free(r_char);
 			_putchar('\n');
-			__exit(1, NULL, NULL);
+			__exit(1, arv, info);
 		}
 		strip_comments(&r_char);
 		set_n_tokens(&n_tokens, r_char);
@@ -97,10 +94,7 @@ int main(int __attribute__((unused)) ac, char **argv)
 		set_tokens(&arv, r_char);
 		run_command(arv, argv, info);
 		if (arv)
-		{
 			free_all(arv);
-			free(arv);
-		}
 		if (info)
 			free_aliases(info);
 		if (r_char)

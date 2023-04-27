@@ -30,5 +30,5 @@ void set_tokens(char ***arv, char *r_char)
 	}
 	(*arv)[i] = token_char;
 	free(r_char_copy);
-/*	free(token_char);*/
+	free(token_char);
 }
