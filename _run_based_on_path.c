@@ -25,7 +25,7 @@ void print_error(char **arv, char **argv)
 	_eputs(arv[0]);
 	_eputs(": not found\n");
 	_eputchar(BUF_FLUSH);
-	exit(1);
+	exit(127);
 }
 
 /**

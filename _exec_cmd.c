@@ -22,7 +22,7 @@ int exec_cmd(char **arv, char *pathname)
 	}
 	else if (c_id == 0)
 	{
-		execve(arv[0], arv, environ);
+		execve(arv[0], arv, NULL);
 
 		perror(pathname);
 

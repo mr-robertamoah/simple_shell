@@ -49,6 +49,5 @@ void _setenv(const char *name, const char *value)
 	environ[counter - 1] = malloc(sizeof(char) * len);
 	if (environ[counter - 1] == NULL && set_error(ENOMEM, env))
 		return;
-
 	_strcpy(environ[counter - 1], env);
 }

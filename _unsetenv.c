@@ -17,6 +17,7 @@ int set_error(int err, char *env)
 
 	errno = err;
 
+	perror("Error: ");
 	return (1);
 }
 

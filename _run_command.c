@@ -13,27 +13,35 @@
 */
 int handle_aliases(char **arv, alias_info_t *info)
 {
-	int i = 1, assign = 0;
+	int i = 1, assign = 0, n_tokens = 0, j;
+	char *delim = "=", **a_str;
 
 	while (arv[i])
 	{
-		if (_strcmp(arv[i], "=") == 0 &&
-			arv[i - 1] && _strlen(arv[i - 1]) > 1 &&
-			arv[i + 1] && _strlen(arv[i + 1]) > 1
-		)
+		if (_strcmp(arv[i], "=") == 0)
 		{
-			add_alias(arv[i - 1], arv[i + 1], info);
 			assign = 1;
 		}
 		i++;
 	}
 
-	if (assign)
-		return (1);
 	i = 1;
 	while (arv[i])
 	{
-		if (arv[i] && _strlen(arv[i]) > 1)
+		if (assign)
+		{
+			set_n_tokens(&n_tokens, arv[i], delim);
+			a_str = malloc(sizeof(char *) * (n_tokens + 1));
+			set_tokens(&a_str, arv[i], delim);
+			j = 0;
+			while (a_str[j])
+			{
+				add_alias(a_str[0], a_str[1], info);
+				j += 2;
+			}
+			free_all(a_str);
+		}
+		else
 		{
 			print_alias(arv[i], info);
 		}
@@ -66,7 +74,7 @@ int _run(char **arv, char **argv, alias_info_t *info)
 	{
 		if (_strcmp(arv[0], "exit") == 0)
 		{
-			__exit(convert_to_error_status(arv[1]), arv, info);
+			return (10 + convert_to_error_status(arv[1]));
 		}
 		else if (_strcmp(arv[0], "env") == 0)
 			print_env();
@@ -140,7 +148,7 @@ void *realloc_void(void *a_arv, int arv_count, int *arv_max,
 *
 * Return: void
 */
-void run_command(char **arv, char **argv, alias_info_t *info)
+int run_command(char **arv, char **argv, alias_info_t *info)
 {
 	int i = 0, j = 0, status = 0, j_max = MAX_ARV;
 	char **new_arv;
@@ -155,23 +163,28 @@ void run_command(char **arv, char **argv, alias_info_t *info)
 		{
 			new_arv[j] = NULL;
 			status = _run(new_arv, argv, info);
-			if (_strcmp(arv[i], "||") == 0 && status)
-				return;
-			if (_strcmp(arv[i], "&&") == 0 && !status)
-				return;
-			new_arv = malloc_void(new_arv, info);
+			free_all(new_arv);
+			if (status >= 10 || (_strcmp(arv[i], "||") == 0 && status) ||
+				(_strcmp(arv[i], "&&") == 0 && !status))
+				return (status);
+			new_arv = malloc(sizeof(char *) * MAX_ARV);
+			if (!new_arv)
+				memory_alloc_err(info);
 			j = 0;
 		}
 		else
 		{
 			new_arv = realloc_void(new_arv, j, &j_max, info);
-			new_arv[j++] = arv[i];
+			new_arv[j] = malloc(sizeof(char) * (_strlen(arv[i]) + 1));
+			_strcpy(new_arv[j++], arv[i]);
 		}
 		i++;
 	}
 	if (j)
 	{
 		new_arv[j] = NULL;
-		_run(new_arv, argv, info);
+		status = _run(new_arv, argv, info);
+		free_all(new_arv);
 	}
+	return (status);
 }

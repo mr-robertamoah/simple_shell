@@ -4,16 +4,20 @@
 * set_tokens - tokens
 * @arv: pointer to pointer to char pointers (string)
 * @r_char: pointer to chars
+* @delim: pointer to chars
 *
 * Description: set the tokens (commands, options, arguments) on
 * the array
 *
 * Return: void
 */
-void set_tokens(char ***arv, char *r_char)
+void set_tokens(char ***arv, char *r_char, char *delim)
 {
 	char *token_char = NULL, *r_char_copy;
 	int i = 0;
+
+	if (!delim)
+		delim = DELIM;
 
 	r_char_copy = malloc(sizeof(char) * (1 + _strlen(r_char)));
 	if (r_char_copy == NULL)

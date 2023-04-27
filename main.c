@@ -86,22 +86,24 @@ int main(int __attribute__((unused)) ac, char **argv)
 		if (n_char == -1)
 		{
 			_putchar('\n');
-			__exit(1, arv, info);
+			__exit(0, arv, info);
 		}
 		strip_comments(&r_char);
-		set_n_tokens(&n_tokens, r_char);
+		set_n_tokens(&n_tokens, r_char, DELIM);
 		arv = malloc(sizeof(char *) * (n_tokens + 1));
-		set_tokens(&arv, r_char);
-		run_command(arv, argv, info);
+		set_tokens(&arv, r_char, DELIM);
+		n_tokens = run_command(arv, argv, info);
 		if (arv)
 			free_all(arv);
 		if (info)
 			free_aliases(info);
-		if (r_char)
+		if (r_char && r_char[0])
 			free(r_char);
-		r_n = 0;
+		if (n_tokens >= 10)
+			__exit(n_tokens - 10, NULL, NULL);
+		r_n = n_tokens = 0;
 		if (!is_interactive)
-			__exit(1, NULL, info);
+			__exit(0, NULL, NULL);
 	}
 	return (0);
 }

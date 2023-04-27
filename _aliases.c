@@ -46,6 +46,7 @@ int add_alias(char *name, char *command, alias_info_t *info)
 {
 	int replaced = 0;
 
+puts("here");
 	if (!info)
 		init_info(info);
 

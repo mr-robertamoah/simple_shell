@@ -64,7 +64,7 @@ int convert_to_error_status(char *str)
 	int i = 0, num = 0;
 
 	if (str == NULL)
-		return (1);
+		return (0);
 
 	while (str[i] != '\0')
 	{
