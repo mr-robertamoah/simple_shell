@@ -98,21 +98,6 @@ void free_aliases(alias_info_t *info)
 	if (!info)
 		return;
 
-/*	while (i < info->aliases_n)
-	{
-		if (!(info->aliases + i))
-		{
-			i++;
-			continue;
-		}
-		if ((info->aliases[i]).name)
-			free((info->aliases[i]).name);
-		if ((info->aliases[i]).command)
-			free((info->aliases[i]).command);
-
-		i++;
-	}
-*/
 	info->aliases_n = 0;
 	info->aliases_max = 0;
 	if (info->aliases)
@@ -140,7 +125,7 @@ int print_alias(char *name, alias_info_t *info)
 
 	while (i < info->aliases_n)
 	{
-		if ((info->aliases[i]).name && 
+		if ((info->aliases[i]).name &&
 			_strcmp((info->aliases[i]).name, name) == 0)
 		{
 			name_len = _strlen((info->aliases[i]).name);
@@ -154,7 +139,7 @@ int print_alias(char *name, alias_info_t *info)
 				command_len = _strlen((info->aliases[i]).command);
 				for (j = 0; j < command_len; j++)
 					_putchar(((info->aliases[i]).command)[j]);
-			}	
+			}
 			_putchar('\n');
 			break;
 		}
